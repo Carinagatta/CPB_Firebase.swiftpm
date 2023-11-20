@@ -23,7 +23,7 @@ class CollegeViewModel: ObservableObject {
         database.child("Colleges").child(college.name).child("name").setValue(college.name)
         database.child("Colleges").child(college.name).child("students").setValue(college.student)
         database.child("Colleges").child(college.name).child("location").setValue(college.location)
-       database.child("colleges").child(college.name).child("URL").setValue(college.URL)
+       database.child("Colleges").child(college.name).child("URL").setValue(college.URL)
     }
     func PullFromFireBase(){
         let databaseRef = Database.database().reference().child("Colleges")
@@ -32,11 +32,10 @@ class CollegeViewModel: ObservableObject {
             for college in myDataSnapshot?.children.allObjects as! [DataSnapshot]{
                 let nameOfCollege = college.key
                 let dictionary = college.value as! [String: Any]
-                let numberOfStudents = dictionary["students"]
-                let nameOfLocation = dictionary["location"]
-                let nameOfURL = dictionary["URL"]
-//                let dictionary = college.value as! [String: Bool]
-//                guard let completed = dictionary["completed"] else {return}
+                guard let numberOfStudents = dictionary["students"] else { return }
+                guard let nameOfLocation = dictionary["location"]  else { return }
+                guard let nameOfURL = dictionary["URL"] else { return }
+        
                 let currentCollege = College(name: nameOfCollege, student: numberOfStudents as! String, location: nameOfLocation as! String, URL: nameOfURL as! String)
                 newList.append(currentCollege)
             }
